@@ -1,66 +1,55 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<div class="container1">
-    <img src="{{ url_for('static',filename='jb.jpg') }}">
-    <div class="content">
-        <center>
-        <h1>Welcome To Travinder.com</h1>
+{% if current_user.is_authenticated %}
+{% if current_user.placeliked %}
+<div class="container">
+    <h1>
+        Places Visited
+    </h1>
+    <div class="row">
+        {% for i in current_user.placeliked %}
+        <div class="col-lg-3" style="background-color: white; margin: 5px; text-align: center;">
+            {{ i }}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<h3>
+    No Places to show
+</h3>
+{% endif %}
+<div class="container">
+    <h1>
+        Places You Might Like
+    </h1>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="form-group">
+            <label for="sel1">You can select multiple places:</label>
+            <select class="form-control" id="sel1" multiple>
+            {% for j in dataset %}
+                {% if j not in current_user.placeliked %}
+                <option>{{ j }}</option>
+                {% endif %}
+            {% endfor %}
+            </select>
+          </div>
+    </div>
+</div>
+{% else %}
+<!-- <div class="container"> -->
+<div id="content">
+    <center>
+        <h1 id="h1wala">Welcome To Traveler.com</h1>
         <p>
             The one stop destination for all travel lovers and all the wanderers. Making travel planning easy to do
             with the help of machine learning.
         </p>
-        </center>
-    </div>
+    </center>
 </div>
-<div class="container2">
-    <h2>Get Started!</h2>
-    <div class="btn-group special mt-3">
-        <button class="btn btn-outline-danger mr-2">Destination</button>
-        <button class="btn btn-outline-success">Local</button>
-    </div>
-</div>
-<div class="gridsystem123">
-    <div class="container-fluid">
-        <div class="row pb-4">
-            <div class="col-8 pt-4">
-                <h3>
-                    Who We Are?
-                </h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto amet cupiditate neque nisi architecto
-                    ipsum officia, voluptatibus, autem velit atque harum, aliquid perferendis assumenda repellat veniam
-                    tempora quos porro tempore.</p>
-            </div>
-            <div class="col-4">
-                <img src="{{ url_for('static', filename='jb.jpg') }}" alt="who we are?" class="img-thumbnail">
-            </div>
-        </div>
-        <div class="row pb-4">
-            <div class="col-4">
-                <img src="{{ url_for('static', filename='jb.jpg') }}" alt="what we do?" class="img-thumbnail">
-            </div>
-            <div class="col-8 pt-4">
-                <h3>
-                    What We Do?
-                </h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto amet cupiditate neque nisi architecto
-                    ipsum officia, voluptatibus, autem velit atque harum, aliquid perferendis assumenda repellat veniam
-                    tempora quos porro tempore.</p>
-            </div>
-        </div>
-        <div class="row pb-4">
-            <div class="col-8 pt-4">
-                <h3>
-                    How We Do It?
-                </h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto amet cupiditate neque nisi architecto
-                    ipsum officia, voluptatibus, autem velit atque harum, aliquid perferendis assumenda repellat veniam
-                    tempora quos porro tempore.</p>
-            </div>
-            <div class="col-4">
-                <img src="{{ url_for('static', filename='jb.jpg') }}" alt="How We Do It?" class="img-thumbnail">
-            </div>
-        </div>
-    </div>
-</div>
+<!-- </div> -->
+{% endif %}
 {% endblock %}

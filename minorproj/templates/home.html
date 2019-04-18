@@ -14,6 +14,9 @@
         </div>
         {% endfor %}
     </div>
+    <div>
+        <a href="{{ url_for('delete_places') }}"><button class="btn brn-success">Clear all Places</button></a>
+    </div>
 </div>
 {% else %}
 <h3>
@@ -26,18 +29,15 @@
     </h1>
 </div>
 <div class="container">
-    <div class="row">
-        <div class="form-group">
-            <label for="sel1">You can select multiple places:</label>
-            <select class="form-control" id="sel1" multiple>
-            {% for j in dataset %}
-                {% if j not in current_user.placeliked %}
-                <option>{{ j }}</option>
-                {% endif %}
-            {% endfor %}
-            </select>
-          </div>
-    </div>
+        <form action="" method="POST">
+            <div class="form-group">
+                {{ forms.select.label }}
+                {{ forms.select(class=" form-control form-control-lg ")}}
+            </div>
+            <div class="form-group">
+                {{ forms.submit(class = "btn btn-danger")}}
+            </div>
+        </form>
 </div>
 {% else %}
 <!-- <div class="container"> -->

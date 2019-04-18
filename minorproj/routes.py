@@ -1,16 +1,33 @@
 from flask import render_template, url_for, flash, redirect, request
 from minorproj import app, db, bcrypt
-from minorproj.forms import RegistrationForm, LoginForm
+from minorproj.forms import RegistrationForm, LoginForm, dropdown
 from minorproj.models import User
 from flask_login import login_user, current_user, logout_user
 import pandas as pd
 
 @app.route('/')
-@app.route('/home')
+@app.route('/home', methods=['GET','POST'])
 def home():
-    df = pd.read_csv('F:\\web development\\Minor Project\\cities.csv')
-    df = df['name_of_city']
-    return render_template('home.html', dataset=df)
+    form = dropdown()
+    if request.method == 'POST':
+        a = form.select.data
+        b = list(current_user.placeliked)
+        if a not in b:
+            b.append(a)
+            current_user.placeliked = b
+            db.session.commit()
+
+        flash('Successfully Added!', 'success')
+
+    return render_template('home.html', forms=form)
+
+@app.route('/delete_places')
+def delete_places():
+    current_user.placeliked = []
+    db.session.commit()
+    flash('Deleted Successfully','danger')
+
+    return redirect(url_for('home'))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -19,8 +36,8 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        placelike = ['Delhi', 'Mumbai']
-        wishlist = ['punjab','haryana']
+        placelike = list()
+        wishlist = list()
         user = User(username = form.username.data, email = form.email.data, password = hashed_password, placeliked = placelike, wishlist = wishlist)
         db.session.add(user)
         db.session.commit()

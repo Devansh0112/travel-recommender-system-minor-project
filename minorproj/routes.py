@@ -3,7 +3,7 @@ from minorproj import app, db, bcrypt
 from minorproj.forms import RegistrationForm, LoginForm, dropdown
 from minorproj.models import User
 from flask_login import login_user, current_user, logout_user
-import pandas as pd
+import minorproj.recommender as re
 
 @app.route('/')
 @app.route('/home', methods=['GET','POST'])
@@ -14,16 +14,19 @@ def home():
         b = list(current_user.placeliked)
         if a not in b:
             b.append(a)
+            c = re.returncities(b)
             current_user.placeliked = b
+            current_user.wishlist = c
             db.session.commit()
 
-        flash('Successfully Added!', 'success')
 
     return render_template('home.html', forms=form)
+    
 
 @app.route('/delete_places')
 def delete_places():
     current_user.placeliked = []
+    current_user.wishlist = []
     db.session.commit()
     flash('Deleted Successfully','danger')
 
